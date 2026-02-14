@@ -28,8 +28,9 @@ fi
 
 echo "run command: ${runCommand[@]}" 
 
-"${runCommand[@]}" >> "$outputFile"
+"${runCommand[@]}" >> "$outputFile" 2>&1
 EXIT_CODE=$?
+cat $outputFile
 
 echo "timestamp=$(date)" >> $GITHUB_OUTPUT
 echo "status=${EXIT_CODE}" >> $GITHUB_OUTPUT
