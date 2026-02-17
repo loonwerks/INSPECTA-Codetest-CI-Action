@@ -32,6 +32,8 @@ echo "run command: ${runCommand[@]}"
 EXIT_CODE=$?
 cat $outputFile
 
+chmod -R +r $sourcePath
+
 echo "timestamp=$(date)" >> $GITHUB_OUTPUT
 echo "status=${EXIT_CODE}" >> $GITHUB_OUTPUT
 
