@@ -8,7 +8,8 @@ inputs:
     default: 'system/hamr/microkit'
   environment-variable:
     description: 'JSON-formatted dictionary of environment variables to pass to the make system.'
-    required: '{}'
+    required: false
+    default: '{}'
 outputs:
   timestamp:
     description: 'The date/time that the code generation was completed'
