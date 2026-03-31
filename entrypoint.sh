@@ -2,6 +2,7 @@
 
 echo "sourcepath: $1"
 echo "environment-variables: $2"
+echo "report-filename: $3"
 
 rustup toolchain list
 rustup target list | grep \(installed\)
@@ -42,7 +43,7 @@ echo "status=${EXIT_CODE}" >> $GITHUB_OUTPUT
 codetestMessages=$(mktemp)
 cat ${outputFile} | jq --raw-input . | jq --slurp '{"messages" : .}' > "${codetestMessages}"
 cat ${codetestMessages} \
-    | jq --arg timestamp "$(date)" --arg exitcode ${{ steps.codetest.outputs.status }} '. += $ARGS.named' \
+    | jq --arg timestamp "$(date)" --arg exitcode $EXIT_CODE '. += $ARGS.named' \
     > ${reportFile}
 rm ${outputFile} ${codetestMessages}
 
