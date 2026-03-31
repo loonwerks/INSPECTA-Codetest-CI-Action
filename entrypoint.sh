@@ -21,13 +21,14 @@ fi
 
 runCommand=(make -C $GITHUB_WORKSPACE/${sourcePath} test)
 
-outputFile="codetest.out"
+reportFile='codetest-report.json'
 if [[ -n $3 ]]; then
-	outputFile=$3
+	reportFile=$3
 fi
 
 echo "run command: ${runCommand[@]}" 
 
+outputFile=$(mktemp)
 "${runCommand[@]}" >> "$outputFile" 2>&1
 EXIT_CODE=$?
 cat $outputFile
@@ -36,6 +37,14 @@ chmod -R +r $sourcePath
 
 echo "timestamp=$(date)" >> $GITHUB_OUTPUT
 echo "status=${EXIT_CODE}" >> $GITHUB_OUTPUT
+
+# Collect codetest report
+codetestMessages=$(mktemp)
+cat ${outputFile} | jq --raw-input . | jq --slurp '{"messages" : .}' > "${codetestMessages}"
+cat ${codetestMessages} \
+    | jq --arg timestamp "$(date)" --arg exitcode ${{ steps.codetest.outputs.status }} '. += $ARGS.named' \
+    > ${reportFile}
+rm ${outputFile} ${codetestMessages}
 
 echo "exit code: $EXIT_CODE"
 if [ "XX $EXIT_CODE" = "XX 0" ]; then

@@ -10,6 +10,10 @@ inputs:
     description: 'JSON-formatted dictionary of environment variables to pass to the make system.'
     required: false
     default: '{}'
+  report-filename:
+    description: 'The name of the file into which to write the JSON-formatted code test analysis report.'
+    required: false
+    default: 'codetest-report.json'
 outputs:
   timestamp:
     description: 'The date/time that the code generation was completed'
@@ -21,3 +25,4 @@ runs:
   args:
     - ${{ inputs.sourcepath }}
     - ${{ inputs.environment-variables }}
+    - ${{ inputs.report-filename }}
